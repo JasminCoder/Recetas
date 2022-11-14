@@ -30,7 +30,7 @@
         {% endwith %}
 
         <!--Mesajes-->
-        <form action="/create/recipe" method="post">
+        <form action="/create/recipe" method="post" enctype="multipart/form-data">
             <div class="form-group">
                 <label for="name">Nombre de la Receta</label>
                 <input type="text" id="name" name="name" class="form-control">
@@ -58,6 +58,11 @@
 
                 <input type="radio" name="under_30" id="under_30NO" value="0" checked>
                 <label for="under_30NO">NO</label>
+            </div>
+            <br>
+            <div class="form-group">
+                <label for="image">Imagen</label>
+                <input type="file" id="image" name="image" class="form-control">
             </div>
             <br>
             <input type="hidden" name="user_id" value="{{session['user_id']}}">

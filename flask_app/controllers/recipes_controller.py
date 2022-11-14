@@ -1,9 +1,13 @@
-from flask import render_template, redirect, request, session
+from flask import render_template, redirect, request, session, flash
 from flask_app import app
 
 #Importamos los modelos
 from flask_app.models.users import User
 from flask_app.models.recipes import Recipe
+
+#Importaciones para subir imágenes
+from werkzeug.utils import secure_filename
+import os
 
 
 #ruta nueva receta
@@ -32,9 +36,40 @@ def create_recipe():
     #Validación de Receta
     if not Recipe.valida_receta(request.form):
         return redirect('/new/recipe')
+
+    #Validamos que haya subido algo
+    if 'image' not in request.files:
+        flash('No seleccionó ninguna imagen', 'receta')
+        return redirect('/new/recipe') 
+
+    #Variable con imagen
+    image = request.files['image'] 
+
+    #Validamos que el nombre no este vacío
+    if image.filename == '':
+        flash('Nombre de imagen vacío', 'receta')
+        return redirect('/new/recipe')
     
+    #Generamos de manera segura el nombre de la imagen
+    nombre_imagen = secure_filename(image.filename) 
+
+    #Guardamos la imagen
+    image.save(os.path.join(app.config['UPLOAD_FOLDER'], nombre_imagen))
+
+
+    #Diccionario con todos los datos del formulario
+    formulario = {
+        "name": request.form['name'],
+        "description": request.form['description'],
+        "instructions": request.form['instructions'],
+        "date_made": request.form['date_made'],
+        "under_30": int(request.form['under_30']),
+        "image": nombre_imagen,
+        "user_id": request.form['user_id']
+    }
+
     #Guardamos la receta
-    Recipe.save(request.form)
+    Recipe.save(formulario)
 
     return redirect('/dashboard')
 
@@ -52,7 +87,7 @@ def edit_recipe(id):
 
     user = User.get_by_id(formulario) #Recibo la instancia de usuario en base a su ID
 
-    #la instancia de la receta que se debe desplegar en editar - en base al ID que recibimos en URL
+    #la instancia de la receta que se debe desplegar en editar (en base al ID que recibimos en URL)
     formulario_receta = {"id": id}
     recipe = Recipe.get_by_id(formulario_receta)
 

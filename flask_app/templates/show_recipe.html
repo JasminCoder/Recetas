@@ -42,6 +42,12 @@
                     {% endif %}
                 </div>
             </div>
+            <br>
+            <div>
+                {% if recipe.image is not none %}
+                    <img src="{{ url_for('static', filename='img/'+recipe.image) }}" class="img-fluid">
+                {% endif %}
+            </div>
 
             <div class="card-footer">
                 Publicado por: {{recipe.first_name}}

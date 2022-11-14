@@ -13,7 +13,9 @@ class Recipe:
         self.under_30 = data['under_30']
         self.created_at = data['created_at']
         self.updated_at = data['updated_at']
+        self.image = data['image']
         self.user_id = data['user_id']
+        
 
         #LEFT JOIN
         self.first_name = data['first_name']
@@ -49,7 +51,7 @@ class Recipe:
     @classmethod
     def save(cls, formulario):
         #formulario = {name: "albondigas", descripction: "albondigas de carne", instruction: "....", date_made: "0000-00-00...."}
-        query = "INSERT INTO recipes (name, description, instructions, date_made, under_30, user_id) VALUES (%(name)s, %(description)s, %(instructions)s, %(date_made)s, %(under_30)s, %(user_id)s)"
+        query = "INSERT INTO recipes (name, description, instructions, date_made, under_30, user_id, image) VALUES (%(name)s, %(description)s, %(instructions)s, %(date_made)s, %(under_30)s, %(user_id)s, %(image)s)"
         result = connectToMySQL('esquema_recetas').query_db(query, formulario)
         return result
 
@@ -101,7 +103,7 @@ class Recipe:
     @classmethod
     def update(cls, formulario):
         #formulario = {name: Albondigas, description: bolitas de carne, instructions:......., recipe_id: 1}
-        query = "UPDATE recipes SET name=%(name)s, description=%(description)s, instructions=%(instructions)s, date_made=%(date_made)s, under_30=%(under_30)s WHERE id=%(recipe_id)s "
+        query = "UPDATE recipes SET name=%(name)s, description=%(description)s, instructions=%(instructions)s, date_made=%(date_made)s, under_30=%(under_30)s, WHERE id=%(recipe_id)s "
         result = connectToMySQL('esquema_recetas').query_db(query, formulario)
         return result
 
